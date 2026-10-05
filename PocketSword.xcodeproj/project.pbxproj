@@ -108,6 +108,7 @@
 		051F22B51737549600DDFF13 /* SILEOT.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SILEOT.ttf; path = Resources/fonts/SILEOT.ttf; sourceTree = "<group>"; };
 		051F22B8173758AD00DDFF13 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = OFL.txt; path = Resources/fonts/OFL.txt; sourceTree = "<group>"; };
 		051FD8B316A3F52C00E7EF2B /* SimpleScripture.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SimpleScripture.entitlements; sourceTree = "<group>"; };
+		D61005002026000000000001 /* SimpleScripture-Distribution.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "SimpleScripture-Distribution.entitlements"; sourceTree = "<group>"; };
 		0528684E13E00D300044A388 /* Padauk.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Padauk.ttf; path = Resources/Padauk.ttf; sourceTree = "<group>"; };
 		052B52841101A32900FFDF01 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = ../iPhoneOS.sdk/usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
@@ -454,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				051FD8B316A3F52C00E7EF2B /* SimpleScripture.entitlements */,
+				D61005002026000000000001 /* SimpleScripture-Distribution.entitlements */,
 				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
 				0545E32710654A8500DD7F06 /* Source */,
 				29B97315FDCFA39411CA2CEA /* misc */,
@@ -1115,7 +1117,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CODE_SIGN_ENTITLEMENTS = SimpleScripture.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "SimpleScripture-Distribution.entitlements";
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

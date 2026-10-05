@@ -128,11 +128,14 @@ Completed on 5 October 2026:
   executable `SimpleScripture`, bundle ID `org.timsam.SimpleScripture`, automatic
   signing and the existing fork team `7SZUJ26BQ2`. Test bundle IDs are
   `org.timsam.SimpleScriptureTests` and `org.timsam.SimpleScriptureUITests`.
-- All app configurations use `SimpleScripture.entitlements`. Its iCloud
-  key-value-store identifier is
-  `$(TeamIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)`. The old CrossWire
-  keychain group and hardcoded `get-task-allow` entitlement are removed;
-  signing supplies the app's default identity.
+- Debug and Release use the empty `SimpleScripture.entitlements`, allowing
+  Personal Team device signing without iCloud. Reading history and bookmarks
+  continue to persist locally. Distribution uses
+  `SimpleScripture-Distribution.entitlements`, with iCloud key-value-store
+  identifier `$(TeamIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)`; signing that
+  configuration requires an Apple developer team that supports iCloud.
+  The old CrossWire keychain group and hardcoded `get-task-allow` entitlement
+  are removed; signing supplies the app's default identity.
 - Project/target/scheme names and the Swift module remain `PocketSword`.
   Shared schemes and the test host point to the renamed app product.
 - `sword://` remains registered. Its URL-type name and the search-index
@@ -141,7 +144,8 @@ Completed on 5 October 2026:
 This is a **new app identity**, not an update to any old PocketSword bundle ID.
 Existing PocketSword local containers, preferences, bookmarks and cloud history
 are not automatically migrated, shared or deleted. Debug, Release and
-Distribution use the same new installation and cloud namespace. Persisted keys
+Distribution use the same new local installation; iCloud is enabled only in
+Distribution. Persisted keys
 (including `reset_PocketSword`), serialization formats and routing code are
 unchanged.
 
@@ -155,8 +159,10 @@ Verification to date:
 - Resolved build settings match across all three configurations. The built
   simulator app contains the new names, generated iPhone/iPad icon entries,
   `sword` scheme and `org.timsam.SimpleScripture.search-index` task identifier.
-  Xcode expanded the simulated key-value-store entitlement to
-  `7SZUJ26BQ2.org.timsam.SimpleScripture`.
+  The initial build expanded a simulated key-value-store entitlement to
+  `7SZUJ26BQ2.org.timsam.SimpleScripture`. A subsequent device-signing attempt
+  established that the configured team is a Personal Team without iCloud
+  support, so the entitlement is now restricted to Distribution.
 - A clean, unsigned Distribution archive succeeded at
   `/tmp/simplescripture-rebrand.xcarchive`. Its compiled asset catalog contains
   only `AppIcon`, `SimpleScriptureAbout` and `AboutAccent`; only Gentium Plus
@@ -169,8 +175,12 @@ Verification to date:
   opens a SimpleScripture page with “Reset SimpleScripture?”; the toggle was
   left off. Screenshots and hierarchy captures are saved under
   `/Users/timsam/.codex/visualizations/2026/10/05/01a10b67-8f76-7ea1-92f4-81aeec954085/rebrand-runtime/`.
-- Signed-device provisioning, App Store registration and live iCloud sync
-  have not been verified by the simulator build/tests.
+- After the Personal Team correction, Xcode completed a signed Debug
+  `iphoneos` build using an app-specific managed development profile for
+  `org.timsam.SimpleScripture`. The signed app contains the application/team
+  identifiers and development debugging entitlement, with no iCloud
+  entitlement. Device launch, Distribution signing, App Store registration
+  and live iCloud sync remain unverified.
 
 The root README/public listing, name availability checks and broader visual
 validation remain separate follow-up work. Release permission/source/data
