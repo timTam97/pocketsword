@@ -25,8 +25,11 @@ visual assets before publication.
   there is no preference migration.
 - The historical Code2000 findings below describe the assessed commit. The
   font remains in Git history; no history rewrite has been performed.
-- The user selected SimpleScripture and the original Gilded Folio icon for
-  the About page. The wider app rename is pending. The new About page
+- The user selected SimpleScripture and the original Gilded Folio icon.
+  The app display name, icon, visible messages and bundle identity are now
+  updated. The obsolete inherited images, artwork sources and screenshots
+  have been removed from the current checkout; their Git history remains.
+  The new About page
   preserves upstream credits and provides offline notices for all five study
   modules, both shipped fonts, GPLv2 and CC BY-SA 3.0. See
   [notice provenance and validation](about-notices.md).

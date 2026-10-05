@@ -7,8 +7,8 @@ The user requested help choosing the name and style, then proposed
 **SimpleScripture**. On 5 October 2026, the user chose SimpleScripture and
 Gilded Folio for the redesigned About page. Its icon is now included in the
 application bundle. The display name and visible application messages now use
-SimpleScripture. Gilded Folio is also installed as the app icon; identifier
-integration is in progress.
+SimpleScripture. Gilded Folio is also installed as the app icon, and all build
+configurations use the fork's new application identity.
 
 ## Selected About direction: SimpleScripture
 
@@ -112,28 +112,57 @@ The earlier editable alternatives are `scripture-folio.svg` and
 `daymark-bible.svg`. Preview images use a rounded mask; the masters themselves
 remain square. They are provisional artwork, not final App Store exports.
 
-## Implementation inventory once the name is selected
+## Application integration
 
-- Display name and product metadata in `misc/Info.plist` and Xcode settings.
-- Launch/error labels, microphone permission copy, and denied-access guidance
-  in `en.lproj/Localizable.strings` and `misc/Info.plist`.
-- About title, icon, feedback subject, project link and fork attribution in
-  `Classes/SwiftUISupportingViews.swift`. Replace the inherited upstream
-  feedback email with a destination owned by this fork; the current GitHub
-  repository is available as a project/support destination.
-- Settings-bundle visible labels, including the reset action.
-- App icon asset catalog and legacy icon/launch-image references in the
-  project and plist; remove superseded inherited art and screenshots from the
-  chosen publication scope.
-- Confirm bundle identifiers and iCloud/key-value-store entitlements. The
-  Distribution configuration and an entitlement still refer to CrossWire.
-  Changing these can change which existing app/container data is accessible.
-- Keep original copyright and license notices. Identify PocketSword as the
-  upstream project in attribution rather than presenting the fork as the
-  original developer's release.
-- Preserve persisted preference keys, serialization formats and supported
-  deep links unless a separate compatibility migration is deliberately made.
-  Internal `PS` class names do not need a mechanical rename to change branding.
+Completed on 5 October 2026:
+
+- Home Screen/display name, bundle name, launch progress and failure messages,
+  microphone permission and denied-access text, the morphology help message,
+  and system Settings labels use SimpleScripture.
+- The approved Gilded Folio PNG supplies both the app icon and About image.
+  Legacy icon plist keys, inherited launch-image assets, unused bitmap controls,
+  artwork sources and old screenshots have been removed from the current tree.
+- About uses the fork's project/support destination and preserves upstream
+  attribution and the offline notices described below.
+- `Debug`, `Release` and `Distribution` build `SimpleScripture.app`, with
+  executable `SimpleScripture`, bundle ID `org.timsam.SimpleScripture`, automatic
+  signing and the existing fork team `7SZUJ26BQ2`. Test bundle IDs are
+  `org.timsam.SimpleScriptureTests` and `org.timsam.SimpleScriptureUITests`.
+- All app configurations use `SimpleScripture.entitlements`. Its iCloud
+  key-value-store identifier is
+  `$(TeamIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)`. The old CrossWire
+  keychain group and hardcoded `get-task-allow` entitlement are removed;
+  signing supplies the app's default identity.
+- Project/target/scheme names and the Swift module remain `PocketSword`.
+  Shared schemes and the test host point to the renamed app product.
+- `sword://` remains registered. Its URL-type name and the search-index
+  background-task identifier now derive from the new bundle ID.
+
+This is a **new app identity**, not an update to any old PocketSword bundle ID.
+Existing PocketSword local containers, preferences, bookmarks and cloud history
+are not automatically migrated, shared or deleted. Debug, Release and
+Distribution use the same new installation and cloud namespace. Persisted keys
+(including `reset_PocketSword`), serialization formats and routing code are
+unchanged.
+
+Verification to date:
+
+- Xcode MCP build-for-testing passed after the icon cleanup and again after
+  the product/identifier changes.
+- All 27 focused tests passed, with zero skips: the 18 persisted-format tests,
+  seven state/notice/routing/background tests, and two UI tests covering the
+  four workspaces and Settings → About → offline credits/licenses.
+- Resolved build settings match across all three configurations. The built
+  simulator app contains the new names, generated iPhone/iPad icon entries,
+  `sword` scheme and `org.timsam.SimpleScripture.search-index` task identifier.
+  Xcode expanded the simulated key-value-store entitlement to
+  `7SZUJ26BQ2.org.timsam.SimpleScripture`.
+- Signed-device provisioning, App Store registration and live iCloud sync
+  have not been verified by the simulator build/tests.
+
+The root README/public listing, name availability checks and broader visual
+validation remain separate follow-up work. Release permission/source/data
+requirements remain in the licensing assessment.
 
 ## Completed preparation
 

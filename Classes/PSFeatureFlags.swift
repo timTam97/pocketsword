@@ -16,7 +16,7 @@ enum PSFeatureFlags {
     /// rebuild, either add `-voiceRefEnabled YES` to the scheme's launch
     /// arguments, or on a simulator:
     ///
-    ///     xcrun simctl spawn booted defaults write org.timsams.PocketSword voiceRefEnabled -bool YES
+    ///     xcrun simctl spawn booted defaults write org.timsam.SimpleScripture voiceRefEnabled -bool YES
     ///
     /// (The bundle id differs per configuration.)
     static var voiceReferenceEnabled: Bool {
