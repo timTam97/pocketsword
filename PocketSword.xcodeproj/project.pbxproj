@@ -103,6 +103,8 @@
 		B22000000000000000000013 /* AppStateStoresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000003 /* AppStateStoresTests.swift */; };
 		B23000000000000000000011 /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* LaunchCoordinator.swift */; };
 		B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24000000000000000000001 /* SwiftUISupportingViews.swift */; };
+		B29000000000000000000011 /* SwiftUIAboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29000000000000000000001 /* SwiftUIAboutView.swift */; };
+		B29000000000000000000012 /* Notices in Resources */ = {isa = PBXBuildFile; fileRef = B29000000000000000000002 /* Notices */; };
 		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
 		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
 		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
@@ -252,6 +254,8 @@
 		B22000000000000000000003 /* AppStateStoresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppStateStoresTests.swift; path = Classes/AppStateStoresTests.swift; sourceTree = "<group>"; };
 		B23000000000000000000001 /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
 		B24000000000000000000001 /* SwiftUISupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISupportingViews.swift; sourceTree = "<group>"; };
+		B29000000000000000000001 /* SwiftUIAboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAboutView.swift; sourceTree = "<group>"; };
+		B29000000000000000000002 /* Notices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Notices; path = Resources/Notices; sourceTree = "<group>"; };
 		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
@@ -435,6 +439,7 @@
 			isa = PBXGroup;
 			children = (
 				E9BD1D530ED34003006A60E9 /* LICENSE.txt */,
+				B29000000000000000000002 /* Notices */,
 			);
 			name = doc;
 			sourceTree = "<group>";
@@ -534,6 +539,7 @@
 				B22000000000000000000001 /* AppStateStores.swift */,
 				B23000000000000000000001 /* LaunchCoordinator.swift */,
 				B24000000000000000000001 /* SwiftUISupportingViews.swift */,
+				B29000000000000000000001 /* SwiftUIAboutView.swift */,
 				B25000000000000000000001 /* SwiftUILibraryViews.swift */,
 				B26000000000000000000001 /* SwiftUISearchViews.swift */,
 				B26000000000000000000002 /* SearchIndexBackgroundManager.swift */,
@@ -779,6 +785,7 @@
 				5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */,
 				5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
+				B29000000000000000000012 /* Notices in Resources */,
 				E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */,
 				05E6A75817FADF790063B18C /* splash-iPad-portrait.png in Resources */,
 				05E6A76217FAE14F0063B18C /* Icon-40.png in Resources */,
@@ -851,6 +858,7 @@
 				B22000000000000000000011 /* AppStateStores.swift in Sources */,
 				B23000000000000000000011 /* LaunchCoordinator.swift in Sources */,
 				B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */,
+				B29000000000000000000011 /* SwiftUIAboutView.swift in Sources */,
 				B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */,
 				B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */,
 				B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */,

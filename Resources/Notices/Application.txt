@@ -1,0 +1,49 @@
+SimpleScripture
+
+SimpleScripture is an independently maintained continuation of PocketSword for iPhone and iPad. It is a modified version of that project, with a Swift and SwiftUI implementation and a new visual identity. It is not an official release of PocketSword or the CrossWire Bible Society.
+
+Project and development source
+https://github.com/timTam97/pocketsword
+
+PocketSword
+
+Originally developed by Nic Carter and the CrossWire Bible Society.
+
+Original project
+https://bitbucket.org/niccarter/pocketsword
+
+CrossWire Bible Society
+https://www.crosswire.org/
+
+Copyright notices retained from the application:
+Copyright (C) 2008-2010 CrossWire Bible Society.
+Copyright 2008-2012 CrossWire Bible Society.
+Copyright 2011 CrossWire Bible Society. All rights reserved.
+Copyright (c) 2013 CrossWire Bible Society. All rights reserved.
+
+MacSword2-derived definitions in globals.h:
+Created by Manfred Bergmann on 03.06.05.
+Copyright 2007 mabe. All rights reserved.
+
+Original contributors
+
+With help from David Bell, Manfred Bergmann, Christoffer Björkskog, Jan Bubík, Vincenzo Carrubba, Cheree Lynley Designs, Dominique Corbex, Bruno Gätjens González, Grace Community Church (HK), Yiguang Hu, John Huss, Nakamaru Kunio, Laurence Rezkalla, Timothy Shen, Vitaliy, Ian Wagner, Henko van de Weerd, and PocketSword beta testers.
+
+These are historical PocketSword credits, including its artwork, translations and testing. The Gilded Folio artwork used on this About page was created for SimpleScripture. The historical credits do not imply that those contributors created or endorse the new artwork or this fork.
+
+Application license
+
+The combined PocketSword-derived application is distributed under the GNU General Public License, version 2. Individual files with a version 2-or-later grant retain that grant. Original copyright and license notices remain applicable.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+The complete GNU GPL version 2 is available offline in Credits & licenses.
+
+Study content and fonts
+
+The Bible, commentary, dictionaries, morphology content and bundled fonts have their own licenses and notices, available separately in Credits & licenses. The application's GPL notice does not replace those terms.
+
+The SWORD Project and CrossWire Bible Society supplied the original study modules. This build reads converted module content; it does not include the SWORD engine.
+https://www.crosswire.org/sword/

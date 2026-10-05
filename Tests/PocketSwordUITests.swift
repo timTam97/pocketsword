@@ -91,6 +91,13 @@ final class PocketSwordUITests: XCTestCase {
 
     @MainActor
     func testSettingsFontPickerAndAbout() throws {
+        func capture(_ name: String) {
+            let attachment = XCTAttachment(screenshot: app.screenshot())
+            attachment.name = name
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+
         selectWorkspace("Settings")
         XCTAssertTrue(
             app.navigationBars["Preferences"].waitForExistence(timeout: 5)
@@ -111,6 +118,50 @@ final class PocketSwordUITests: XCTestCase {
             app.descendants(matching: .any)["about.header"]
                 .waitForExistence(timeout: 5)
         )
+        capture("SimpleScripture About")
+        app.buttons["about.acknowledgements"].tap()
+        XCTAssertTrue(
+            app.navigationBars["Credits & licenses"].waitForExistence(timeout: 5)
+        )
+        capture("SimpleScripture Credits")
+        app.buttons["about.notice.gpl"].tap()
+        let license = app.scrollViews["about.document.gpl"]
+        XCTAssertTrue(license.waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            license.staticTexts.containing(NSPredicate(
+                format: "label CONTAINS %@", "GNU GENERAL PUBLIC LICENSE"
+            )).firstMatch.waitForExistence(timeout: 5)
+        )
+        capture("SimpleScripture GPL")
+
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["about.notice.Robinson"].tap()
+        let robinson = app.scrollViews["about.document.Robinson"]
+        XCTAssertTrue(robinson.waitForExistence(timeout: 5))
+        capture("SimpleScripture Robinson")
+        let ccLink = app.buttons["about.robinson.license"]
+        for _ in 0..<6 {
+            if ccLink.isHittable { break }
+            robinson.swipeUp()
+        }
+        XCTAssertTrue(ccLink.isHittable)
+        ccLink.tap()
+        XCTAssertTrue(
+            app.scrollViews["about.document.cc-by-sa"].waitForExistence(timeout: 5)
+        )
+        capture("SimpleScripture Creative Commons")
+
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["about.notice.ezra"].tap()
+        let ezra = app.scrollViews["about.document.ezra"]
+        XCTAssertTrue(ezra.waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            ezra.staticTexts.containing(NSPredicate(
+                format: "label CONTAINS %@", "MIT/X11"
+            )).firstMatch.waitForExistence(timeout: 5)
+        )
+        capture("SimpleScripture Ezra")
     }
 
     @MainActor

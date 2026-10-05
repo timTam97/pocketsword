@@ -159,20 +159,53 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
-    func testAboutFeedbackUsesMailtoWithoutMessageUI() throws {
+    func testAboutFeedbackUsesTheForkIssueTracker() throws {
         let information = AboutInformation.current()
         let components = try XCTUnwrap(
             URLComponents(url: information.feedbackURL, resolvingAgainstBaseURL: false)
         )
 
-        XCTAssertEqual(components.scheme, "mailto")
-        XCTAssertEqual(components.path, "pocketsword@icloud.com")
+        XCTAssertEqual(components.scheme, "https")
+        XCTAssertEqual(components.host, "github.com")
+        XCTAssertEqual(components.path, "/timTam97/pocketsword/issues/new")
         XCTAssertTrue(
             components.queryItems?.contains {
-                $0.name == "subject"
-                    && ($0.value?.hasPrefix("PocketSword Feedback") ?? false)
+                $0.name == "title"
+                    && $0.value == "SimpleScripture feedback"
             } ?? false
         )
+        XCTAssertTrue(
+            components.queryItems?.contains {
+                $0.name == "body"
+                    && ($0.value?.contains("\(information.version) (\(information.build))") ?? false)
+            } ?? false
+        )
+    }
+
+    func testAboutNoticesAreBundledAndMatchTheShippedComponents() throws {
+        let store = try XCTUnwrap(PSContentStore.shared)
+        XCTAssertEqual(Set(AboutNotice.modules.map(\.id)), Set(BundledModules.all))
+        for module in AboutNotice.modules {
+            XCTAssertEqual(module.version, store.moduleVersion(module.id), module.id)
+        }
+        // Read the installed app bundle, so missing Copy Resources membership fails.
+        for notice in AboutNotice.all {
+            XCTAssertGreaterThan(try notice.text().count, 100, notice.id)
+        }
+        let robinson = try XCTUnwrap(AboutNotice.modules.first { $0.id == "Robinson" })
+        let robinsonText = try robinson.text()
+        XCTAssertTrue(robinsonText.contains("CrossWire Bible Society"))
+        XCTAssertTrue(robinsonText.contains("2002"))
+        XCTAssertTrue(robinsonText.contains("2009"))
+        XCTAssertTrue(robinsonText.contains("https://creativecommons.org/licenses/by-sa/3.0/"))
+        XCTAssertTrue(robinsonText.contains("converted"))
+        let ezra = try XCTUnwrap(AboutNotice.fonts.first { $0.id == "ezra" })
+        let ezraText = try ezra.text()
+        XCTAssertTrue(ezraText.contains("Ralph Hancock and John Hudson"))
+        XCTAssertTrue(ezraText.contains("MIT/X11 License"))
+        XCTAssertTrue(ezraText.contains("SIL OPEN FONT LICENSE Version 1.1"))
+        XCTAssertTrue(try AboutNotice.gpl.text().contains("NO WARRANTY"))
+        XCTAssertTrue(try AboutNotice.creativeCommons.text().contains("8. Miscellaneous"))
     }
 
     @MainActor

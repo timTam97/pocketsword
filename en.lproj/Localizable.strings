@@ -1,4 +1,4 @@
-﻿/*
+/*
  * PocketSword - A frontend for viewing SWORD project modules on iOS
  *
  * Copyright 2008-2012 CrossWire Bible Society – http://www.crosswire.org
@@ -299,17 +299,40 @@
 // SwiftUI supporting screens
 "SettingsReadingPreview" = "In the beginning God created the heaven and the earth.";
 "SettingsReadingPreviewReference" = "Genesis 1:1";
-"AboutCommunityTitle" = "PocketSword and CrossWire";
-"AboutProjectLink" = "PocketSword Project";
-"AboutCrossWireLink" = "CrossWire Bible Society";
-"AboutUserForumsLink" = "User Forums";
-"AboutCompanionAppsTitle" = "Companion Scripture Apps";
-"AboutCreditsTitle" = "Credits";
-"AboutDevelopedByText" = "Developed by Nic Carter and the CrossWire Bible Society.";
-"AboutContributorsText" = "With help from David Bell, Manfred Bergmann, Christoffer Björkskog, Jan Bubík, Vincenzo Carrubba, Cheree Lynley Designs, Dominique Corbex, Bruno Gätjens González, Grace Community Church (HK), Yiguang Hu, John Huss, Nakamaru Kunio, Laurence Rezkalla, Timothy Shen, Vitaliy, Ian Wagner, Henko van de Weerd, and PocketSword beta testers.";
-"AboutOpenSourceTitle" = "Open Source";
-"AboutFontLicenseText" = "Ezra SIL and Gentium Plus are distributed under the SIL Open Font License.";
-"AboutFeedbackTitle" = "Feedback and Translation";
+// About redesigned for SimpleScripture, 5 October 2026.
+// Original contributor credits are preserved in Resources/Notices/Application.txt.
+"AboutTagline" = "Read, search and study the Bible.";
+"AboutAcknowledgementsTitle" = "Credits & licenses";
+"AboutProjectSourceLink" = "Project & source code";
+"AboutReportIssueLink" = "Report an issue";
+"AboutHeritageTitle" = "Built on PocketSword";
+"AboutHeritageText" = "SimpleScripture is an independent continuation of PocketSword, originally developed by Nic Carter and the CrossWire Bible Society.";
+"AboutLicenseScope" = "App software: GNU GPL v2. Study texts and fonts retain their separate licenses.";
+"AboutApplicationSection" = "Application";
+"AboutTextsSection" = "Bible & study texts";
+"AboutFontsSection" = "Typefaces";
+"AboutUpstreamTitle" = "PocketSword & contributors";
+"AboutUpstreamSubtitle" = "Origins, copyright and acknowledgements";
+"AboutGPLTitle" = "GNU General Public License v2";
+"AboutGPLSubtitle" = "Complete application license";
+"AboutCCTitle" = "Creative Commons BY-SA 3.0";
+"AboutCCSubtitle" = "Attribution-ShareAlike 3.0 Unported";
+"AboutKJVTitle" = "King James Version";
+"AboutKJVSubtitle" = "CrossWire electronic text; Crown rights acknowledged";
+"AboutMHCCTitle" = "Matthew Henry’s Concise Commentary";
+"AboutGreekTitle" = "Strong’s Greek Dictionary";
+"AboutHebrewTitle" = "Strong’s Hebrew Dictionary";
+"AboutRobinsonTitle" = "Robinson’s Morphological Analysis Codes";
+"AboutPublicDomain" = "Public domain, as supplied by CrossWire";
+"AboutGentiumTitle" = "Gentium Plus";
+"AboutEzraTitle" = "Ezra SIL";
+"AboutOFLSubtitle" = "SIL Open Font License 1.1";
+"AboutEzraSubtitle" = "SIL Open Font License 1.1 & MIT/X11";
+"AboutOfflineNotices" = "These notices and complete license texts are included with the app and can be read offline.";
+"About component version %@" = "Bundled version %@";
+"AboutReadCCLicense" = "Read the complete CC BY-SA 3.0 license";
+"AboutNoticeUnavailable" = "Notice could not be opened";
+"AboutNoticeUnavailableMessage" = "The bundled notice is missing or unreadable. Reinstall the app to restore it, or report the issue from the About page.";
 
 // SwiftUI reading chrome (Wave 7)
 

@@ -1,0 +1,23 @@
+Strongs Real Hebrew Bible Dictionary
+
+StrongsRealHebrew · Version 1.090107
+
+The original CrossWire SWORD module was converted into the app’s bundled content store. The content retains the permissions and notices below.
+
+Original module notices are preserved below; historical contact details and source addresses are reproduced as supplied.
+
+Jens Grebner's Strong's Hebrew. See http://www.walljm.com/misc/heb_strongs.zip.
+
+ Previous "about" text:
+
+ Strong's Bible Dictionary
+
+ Dictionaries of Hebrew and Greek Words taken from Strong's Exhaustive Concordance by James Strong, S.T.D., LL.D. 1890
+ Public Domain -- Copy Freely
+ see STRONGS.DOC for more information
+
+Distribution license (as supplied)
+Public Domain
+
+Text source (as supplied)
+http://morphgnt.org/projects/strongs-dictionary

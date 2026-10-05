@@ -1,0 +1,21 @@
+Robinson's Morphological Analysis Codes
+
+Robinson · Version 2.0
+
+This copy of Robinson’s Morphological Analysis Codes was converted from the CrossWire SWORD module into the app’s compressed SQLite content store and rendered as native text. The converted content remains under Creative Commons Attribution-ShareAlike 3.0 Unported. This format conversion is a change to the original module’s packaging. No endorsement by the original authors is implied.
+
+Original module notices are preserved below; historical contact details and source addresses are reproduced as supplied.
+
+Produced in accordance with the key at http://www.byztxt.com/download/PARSINGS.TXT, on the basis of numerous Greek texts, and with significant editorial and corrective emendation.
+ This text was first created by the CrossWire Bible Society in 2002, and recreated in 2009 using the more recent coding system and numerous additional Greek texts.
+
+Distribution license (as supplied)
+Creative Commons: by-sa
+
+Distribution is permitted only in accordance with the terms of the Creative Commons Attribution-Share Alike 3.0 license (http://creativecommons.org/licenses/by-sa/3.0/). Modification and format shifting are permitted, but you must credit the CrossWire Bible Society and you may not prevent others from making use of your modifications (either by legal threat or by encrypting the text that you distribute) under the same terms.
+
+Text source (as supplied)
+CrossWire Bible Society
+
+Creative Commons Attribution-ShareAlike 3.0 Unported
+https://creativecommons.org/licenses/by-sa/3.0/
