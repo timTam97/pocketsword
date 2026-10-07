@@ -85,7 +85,8 @@ struct PocketSwordApp: App {
     }
 }
 
-/// Launch gate. Shows the spinner while `LaunchCoordinator` runs, then the app.
+/// Launch gate. Keeps the splash visible while `LaunchCoordinator` runs, then
+/// opens the app as soon as preparation finishes.
 private struct RootView: View {
     let session: AppSession
     let reading: ReadingWorkspaceModel
