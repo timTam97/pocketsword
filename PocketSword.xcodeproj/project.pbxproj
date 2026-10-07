@@ -151,7 +151,7 @@
 		5A1F70B00000000000WAVE921 /* PSEntryDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSEntryDocument.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZK001 /* PSModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleController.swift; path = Classes/PSModuleController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordAppDelegate.swift; path = Classes/PocketSwordAppDelegate.swift; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/icon/Info.plist; sourceTree = "<group>"; };
 		A100000000000000000000F3 /* PSSearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchEngine.swift; path = Classes/PSSearchEngine.swift; sourceTree = "<group>"; };
 		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
@@ -776,7 +776,7 @@
 					"$(SDKROOT)/usr/lib",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = misc/Info.plist;
+				INFOPLIST_FILE = misc/icon/Info.plist;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -803,7 +803,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib",
 				);
-				INFOPLIST_FILE = misc/Info.plist;
+				INFOPLIST_FILE = misc/icon/Info.plist;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -1104,7 +1104,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib",
 				);
-				INFOPLIST_FILE = misc/Info.plist;
+				INFOPLIST_FILE = misc/icon/Info.plist;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LIBRARY_SEARCH_PATHS = (

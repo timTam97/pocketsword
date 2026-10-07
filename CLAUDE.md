@@ -177,7 +177,7 @@ The split by scope is load-bearing:
 
 ### URL handling
 
-`sword://` is registered in `misc/Info.plist`. URLs arrive via `onOpenURL` → `AppSession.open(_:)`; before launch prep finishes they are held in `pendingURL`.
+`sword://` is registered in `misc/icon/Info.plist`. URLs arrive via `onOpenURL` → `AppSession.open(_:)`; before launch prep finishes they are held in `pendingURL`.
 
 | URL | resolves to |
 |---|---|
